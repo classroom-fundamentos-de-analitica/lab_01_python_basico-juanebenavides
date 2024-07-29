@@ -11,7 +11,12 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 
 """
-
+def peticion():
+    with open("data.csv", "r") as file:
+        datos=file.readlines()
+    datos=[line.split("\n") for line in datos]
+    datos=[[elemento for elemento in sublist.split('\t') if elemento] for sublist, _ in datos]
+    return datos
 
 def pregunta_01():
     """
@@ -19,19 +24,13 @@ def pregunta_01():
 
     Rta/
     214
+
     """
-    suma = 0
-    with open("data.csv", "r") as file:
-        for line in file:
-            columns = line.strip().split("\t")
-            suma += int(columns[1])
+    datos=peticion()
+    suma=map(lambda fila: fila[1], datos)
+    suma=sum(map(int, suma))
+
     return suma
-
-
-#datos_segunda_columna = pregunta_01()
-#print(datos_segunda_columna)
-
-
 
 def pregunta_02():
     """
@@ -48,31 +47,16 @@ def pregunta_02():
     ]
 
     """
-
-    # Inicializar un diccionario para contar las ocurrencias de cada letra
-    counts = {}
-    
-    # Abrir el archivo y leer línea por línea
-    with open('data.csv', 'r') as file:
-        for line in file:
-            # Separar la línea por tabulación para obtener las columnas
-            columns = line.strip().split('\t')
-            # Obtener la primera columna (la letra)
-            letter = columns[0]
-            # Contar la ocurrencia de la letra
-            if letter in counts:
-                counts[letter] += 1
-            else:
-                counts[letter] = 1
-    
-    # Convertir el diccionario en una lista de tuplas y ordenar alfabéticamente por la letra
-    result = sorted(counts.items())
-    
-    return result
-
-#print(pregunta_02())
-
-
+    datos=peticion()
+    conteo = {}
+    for sublist in datos:
+        letra = sublist[0][0]
+        if letra in conteo:
+            conteo[letra] += 1
+        else:
+            conteo[letra] = 1
+    conteo_ordenado = sorted(conteo.items())
+    return conteo_ordenado
 
 def pregunta_03():
     """
@@ -89,31 +73,17 @@ def pregunta_03():
     ]
 
     """
-    # Inicializar un diccionario para sumar los valores de la segunda columna por cada letra
-    sums = {}
-
-    with open('data.csv', 'r') as file:
-        for line in file:
-            # Separar la línea por tabulación para obtener las columnas
-            columns = line.strip().split('\t')
-            # Obtener la primera columna (la letra)
-            letter = columns[0]
-            # Obtener el valor de la segunda columna y convertirlo a entero
-            value = int(columns[1])
-            # Sumar el valor en el diccionario
-            if letter in sums:
-                sums[letter] += value
-            else:
-                sums[letter] = value
-    
-    # Convertir el diccionario en una lista de tuplas y ordenar alfabéticamente por la letra
-    result = sorted(sums.items())
-    
-    return result
-
-
-#print(pregunta_03())
-
+    datos=peticion()
+    conteo = {}
+    for sublist in datos:
+        letra = sublist[0][0]
+        suma=int(sublist[1][0])
+        if letra in conteo:
+            conteo[letra] += suma
+        else:
+            conteo[letra] = suma
+    conteo_ordenado = sorted(conteo.items())
+    return conteo_ordenado
 
 def pregunta_04():
     """
@@ -137,31 +107,18 @@ def pregunta_04():
     ]
 
     """
-    month_counts = {}
-    
-
-    with open('data.csv', 'r') as file:
-        for line in file:
-            # Separar la línea por tabulación para obtener las columnas
-            columns = line.strip().split('\t')
-            # Obtener la fecha de la tercera columna
-            date = columns[2]
-            # Extraer el mes de la fecha (YYYY-MM-DD)
-            month = date.split('-')[1]
-            # Contar la ocurrencia del mes
-            if month in month_counts:
-                month_counts[month] += 1
-            else:
-                month_counts[month] = 1
-    
-    # Convertir el diccionario en una lista de tuplas y ordenar alfabéticamente por el mes
-    result = sorted(month_counts.items())
-    
-    return result
-
-
-#print(pregunta_04())
-
+    datos=peticion()
+    conteo = {}
+    for sublist in datos:
+        mes = sublist[2]
+        mes = mes.split("-")
+        mes = mes[1]
+        if mes in conteo:
+            conteo[mes] += 1
+        else:
+            conteo[mes] = 1
+    conteo_ordenado = sorted(conteo.items())
+    return conteo_ordenado
 
 def pregunta_05():
     """
@@ -178,29 +135,24 @@ def pregunta_05():
     ]
 
     """
-    min_max_values = {}
-    
-    # Abrir el archivo y leer línea por línea
-    with open('data.csv', 'r') as file:
-        for line in file:
-            # Separar la línea por tabulación para obtener las columnas
-            columns = line.strip().split('\t')
-            # Obtener la primera columna (letra) y la segunda columna (valor)
-            letter = columns[0]
-            value = int(columns[1])
-            # Actualizar los valores máximo y mínimo para la letra
-            if letter in min_max_values:
-                min_max_values[letter]['max'] = max(min_max_values[letter]['max'], value)
-                min_max_values[letter]['min'] = min(min_max_values[letter]['min'], value)
-            else:
-                min_max_values[letter] = {'max': value, 'min': value}
-    
-    # Convertir el diccionario en una lista de tuplas y ordenar alfabéticamente por la letra
-    result = [(letter, values['max'], values['min']) for letter, values in sorted(min_max_values.items())]
-    
-    return result
-
-#print(pregunta_05())
+    datos=peticion()
+    conteo = {}
+    for sublist in datos:
+        letra = sublist[0][0]
+        comparacion=int(sublist[1][0])
+        if letra in conteo:
+            if conteo[letra][0] < comparacion:
+                conteo[letra][0] = comparacion
+            elif conteo[letra][1] > comparacion:
+                conteo[letra][1] = comparacion
+        else:
+            conteo[letra] = [comparacion,comparacion]
+    lista1=list(conteo.items())
+    conteo_ordenado = []
+    for i in range(len(lista1)):
+        conteo_ordenado.append((lista1[i][0],lista1[i][1][0],lista1[i][1][1]))
+    conteo_ordenado = sorted(conteo_ordenado, key=lambda x: x[0])
+    return conteo_ordenado
 
 
 def pregunta_06():
@@ -225,32 +177,28 @@ def pregunta_06():
     ]
 
     """
-    value_ranges = {}
-    
-    with open('data.csv', 'r') as file:
-        for line in file:
-            # Separar la línea por tabulación para obtener las columnas
-            columns = line.strip().split('\t')
-            # Obtener la quinta columna (el diccionario codificado)
-            encoded_dict = columns[4]
-            # Separar las entradas del diccionario
-            entries = encoded_dict.split(',')
-            for entry in entries:
-                key, value = entry.split(':')
-                value = int(value)
-                if key in value_ranges:
-                    value_ranges[key]['min'] = min(value_ranges[key]['min'], value)
-                    value_ranges[key]['max'] = max(value_ranges[key]['max'], value)
-                else:
-                    value_ranges[key] = {'min': value, 'max': value}
-    
-    # Convertir el diccionario en una lista de tuplas y ordenar alfabéticamente por la clave
-    result = [(key, values['min'], values['max']) for key, values in sorted(value_ranges.items())]
-    
-    return result
-
-#print(pregunta_06())
-
+    datos=peticion()
+    conteo = {}
+    for sublist in datos:
+        linea = sublist[4]
+        comparacion=linea.split(",")
+        for par in comparacion:
+            par=par.split(":")
+            letras=par[0]
+            numero=int(par[1])
+            if letras in conteo:
+                if conteo[letras][0] > numero:
+                    conteo[letras][0] = numero
+                elif conteo[letras][1] < numero:
+                    conteo[letras][1] = numero
+            else:
+                conteo[letras] = [numero,numero]
+    lista1=list(conteo.items())
+    conteo_ordenado = []
+    for i in range(len(lista1)):
+        conteo_ordenado.append((lista1[i][0],lista1[i][1][0],lista1[i][1][1]))
+    conteo_ordenado = sorted(conteo_ordenado, key=lambda x: x[0])
+    return conteo_ordenado
 
 
 def pregunta_07():
@@ -274,28 +222,23 @@ def pregunta_07():
     ]
 
     """
-    # Inicializar un diccionario para almacenar las listas de letras por valor de la columna 2
-    associations = {}
-    
-    with open('data.csv', 'r') as file:
-        for line in file:
-            # Separar la línea por tabulación para obtener las columnas
-            columns = line.strip().split('\t')
-            # Obtener el valor de la columna 2 y la letra de la columna 1
-            value = int(columns[1])
-            letter = columns[0]
-            # Agregar la letra a la lista correspondiente en el diccionario
-            if value in associations:
-                associations[value].append(letter)
+    datos=peticion()
+    conteo = {}
+    for sublist in datos:
+        linea = sublist[1]
+        letra = sublist[0]
+        for par in linea:
+            numero=int(par)
+            if numero in conteo:
+                conteo[numero].append(letra)
             else:
-                associations[value] = [letter]
-    
-    # Convertir el diccionario en una lista de tuplas y ordenar por el valor de la columna 2
-    result = sorted(associations.items())
-    
-    return result
-
-#print(pregunta_07())
+                conteo[numero] = [letra]
+    lista1=list(conteo.items())
+    conteo_ordenado = []
+    for i in range(len(lista1)):
+        conteo_ordenado.append((lista1[i][0],lista1[i][1]))
+    conteo_ordenado = sorted(conteo_ordenado, key=lambda x: x[0])
+    return conteo_ordenado
 
 
 def pregunta_08():
@@ -320,28 +263,24 @@ def pregunta_08():
     ]
 
     """
-    # Inicializar un diccionario para almacenar las letras únicas por valor de la columna 2
-    associations = {}
-
-    with open('data.csv', 'r') as file:
-        for line in file:
-            # Separar la línea por tabulación para obtener las columnas
-            columns = line.strip().split('\t')
-            # Obtener el valor de la columna 2 y las letras de la columna 1
-            value = int(columns[1])
-            letters = columns[0]
-            # Agregar las letras a la lista correspondiente en el diccionario
-            if value in associations:
-                associations[value].update(letters)
+    datos=peticion()
+    conteo = {}
+    for sublist in datos:
+        linea = sublist[1]
+        letra = sublist[0]
+        for par in linea:
+            numero=int(par)
+            if numero in conteo:
+                if not letra in conteo[numero]:
+                    conteo[numero].append(letra)
             else:
-                associations[value] = set(letters)
-    
-    # Convertir el diccionario en una lista de tuplas y ordenar por el valor de la columna 2
-    result = [(key, sorted(list(letters))) for key, letters in sorted(associations.items())]
-    
-    return result
-
-#print(pregunta_08())
+                conteo[numero] = [letra]
+    lista1=list(conteo.items())
+    conteo_ordenado = []
+    for i in range(len(lista1)):
+        conteo_ordenado.append((lista1[i][0],sorted(lista1[i][1])))
+    conteo_ordenado = sorted(conteo_ordenado, key=lambda x: x[0])
+    return conteo_ordenado
 
 
 def pregunta_09():
@@ -364,30 +303,21 @@ def pregunta_09():
     }
 
     """
-    counts = {}
+    datos=peticion()
+    conteo = {}
+    for sublist in datos:
+        linea = sublist[4]
+        comparacion=linea.split(",")
+        for par in comparacion:
+            par=par.split(":")
+            letras=par[0]
+            if letras in conteo:
+                conteo[letras] += 1
+            else:
+                conteo[letras] = 1
+    return conteo
 
-    with open('data.csv', 'r') as file:
-        for line in file:
-            # Separar la línea por tabulación para obtener las columnas
-            columns = line.strip().split('\t')
-            # Obtener la columna 5 y dividirla en claves y valores
-            if len(columns) > 4:  # Asegurarse de que la columna 5 existe
-                entries = columns[4].split(',')
-                for entry in entries:
-                    key = entry.split(':')[0]
-                    # Contar cada clave
-                    if key in counts:
-                        counts[key] += 1
-                    else:
-                        counts[key] = 1
-
-    result = [key for key in sorted(counts.items())]
-    result = dict(result)
-    return result
-
-
-#print(pregunta_09())
-
+print(pregunta_09())
 
 def pregunta_10():
     """
@@ -407,23 +337,14 @@ def pregunta_10():
 
 
     """
-    # Inicializar una lista para almacenar los resultados
-    result = []
-
-    with open('data.csv', 'r') as file:
-        for line in file:
-            # Separar la línea por tabulación para obtener las columnas
-            columns = line.strip().split('\t')
-            if len(columns) > 4:
-                letter = columns[0]
-                col4_count = len(columns[3].split(','))
-                col5_count = len(columns[4].split(','))
-                result.append((letter, col4_count, col5_count))
-    
-    return result
-
-
-#print(pregunta_10())
+    datos=peticion()
+    conteo_ordenado = []
+    for sublist in datos:
+        letra=sublist[0]
+        abecedario=sublist[3].split(",")
+        linea = sublist[4].split(",")
+        conteo_ordenado.append((letra,len(abecedario),len(linea)))
+    return conteo_ordenado
 
 
 def pregunta_11():
@@ -441,34 +362,18 @@ def pregunta_11():
         "f": 134,
         "g": 35,
     }
-
-
     """
-    sums = {}
-
-    with open('data.csv', 'r') as file:
-        for line in file:
-            # Separar la línea por tabulación para obtener las columnas
-            columns = line.strip().split('\t')
-            if len(columns) > 4:
-                value = int(columns[1])
-                letters = columns[3].split(',')
-                
-                for letter in letters:
-                    # Sumar los valores en la columna 2 para cada letra de la columna 4
-                    if letter in sums:
-                        sums[letter] += value
-                    else:
-                        sums[letter] = value
-    
-    # Ordenar el diccionario por las claves (letras) alfabéticamente
-    sorted_sums = dict(sorted(sums.items()))
-    
-    return sorted_sums
-
-
-#print(pregunta_11())
-
+    datos=peticion()
+    conteo_ordenado ={}
+    for sublist in datos:
+        letra=sublist[1]
+        abecedario=sublist[3].split(",")
+        for i in abecedario:
+            if i in conteo_ordenado:
+                conteo_ordenado[i] += int(letra)
+            else:
+                conteo_ordenado[i] = int(letra)
+    return conteo_ordenado
 
 def pregunta_12():
     """
@@ -485,28 +390,18 @@ def pregunta_12():
     }
 
     """
-    # Inicializar un diccionario para almacenar la suma de los valores de la columna 5 por letra en la columna 1
-    sums = {}
-
-    with open('data.csv', 'r') as file:
-        for line in file:
-            # Separar la línea por tabulación para obtener las columnas
-            columns = line.strip().split('\t')
-            if len(columns) > 4:
-                letter = columns[0]
-                # Dividir la columna 5 en entradas
-                entries = columns[4].split(',')
-                # Sumar los valores en la columna 5
-                total_sum = sum(int(entry.split(':')[1]) for entry in entries)
-                
-                # Sumar al total acumulado para la letra correspondiente
-                if letter in sums:
-                    sums[letter] += total_sum
-                else:
-                    sums[letter] = total_sum
-    result = [letter for letter in sorted(sums.items())]
-    result = dict(result)
-    return result
-
-# Llamar a la función y mostrar el resultado
-#print(pregunta_12())
+    datos=peticion()
+    conteo_ordenado ={}
+    letras = set()
+    for fila in datos:
+        letras.add(fila[0])
+    for sublist in datos:
+        letra=sublist[0]
+        abecedario=sublist[4].split(",")
+        for i in abecedario:
+            probar=i.split(":")
+            if letra in conteo_ordenado:
+                conteo_ordenado[letra] += int(probar[1])
+            else:
+                conteo_ordenado[letra] = int(probar[1])
+    return conteo_ordenado
