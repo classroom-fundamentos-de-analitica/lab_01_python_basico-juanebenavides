@@ -11,26 +11,22 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 
 """
-def peticion():
-    with open("data.csv", "r") as file:
-        datos=file.readlines()
-    datos=[line.split("\n") for line in datos]
-    datos=[[elemento for elemento in sublist.split('\t') if elemento] for sublist, _ in datos]
-    return datos
+
 
 def pregunta_01():
     """
-    Retorne la suma de la segunda columna.
+        Retorne la suma de la segunda columna.
 
-    Rta/
-    214
+        Rta/
+        214
 
-    """
-    datos=peticion()
-    suma=map(lambda fila: fila[1], datos)
-    suma=sum(map(int, suma))
+        """
+    with open("data.csv", "r") as archivo:
+        suma = 0
+        for linea in archivo.readlines():
+            suma += int(linea.split(",")[1])
+        return suma
 
-    return suma
 
 def pregunta_02():
     """
@@ -45,18 +41,16 @@ def pregunta_02():
         ("D", 6),
         ("E", 14),
     ]
-
     """
-    datos=peticion()
-    conteo = {}
-    for sublist in datos:
-        letra = sublist[0][0]
-        if letra in conteo:
-            conteo[letra] += 1
-        else:
-            conteo[letra] = 1
-    conteo_ordenado = sorted(conteo.items())
-    return conteo_ordenado
+    with open("data.csv", "r") as archivo:
+        registros = [linea.split(",")[0] for linea in archivo.readlines()]
+        contador = {}
+        for letra in registros:
+            if letra not in contador:
+                contador[letra] = 0
+            contador[letra] += 1
+        return sorted([(letra, cantidad) for letra, cantidad in contador.items()], key=lambda x: x[0])
+
 
 def pregunta_03():
     """
@@ -71,19 +65,15 @@ def pregunta_03():
         ("D", 31),
         ("E", 67),
     ]
-
     """
-    datos=peticion()
-    conteo = {}
-    for sublist in datos:
-        letra = sublist[0][0]
-        suma=int(sublist[1][0])
-        if letra in conteo:
-            conteo[letra] += suma
-        else:
-            conteo[letra] = suma
-    conteo_ordenado = sorted(conteo.items())
-    return conteo_ordenado
+    with open("data.csv", "r") as archivo:
+        registros = [linea.split(",")[0] for linea in archivo.readlines()]
+        contador = {}
+        for letra in registros:
+            if letra not in contador:
+                contador[letra] = 0
+            contador[letra] += int(linea.split(",")[1])
+        return sorted([(letra, suma) for letra, suma in contador.items()], key=lambda x: x[0])
 
 def pregunta_04():
     """
@@ -107,18 +97,17 @@ def pregunta_04():
     ]
 
     """
-    datos=peticion()
-    conteo = {}
-    for sublist in datos:
-        mes = sublist[2]
-        mes = mes.split("-")
-        mes = mes[1]
-        if mes in conteo:
-            conteo[mes] += 1
-        else:
-            conteo[mes] = 1
-    conteo_ordenado = sorted(conteo.items())
-    return conteo_ordenado
+    with open("data.csv", "r") as archivo:
+        registros = [linea.split(",")[2].split("-")[1] for linea in archivo.readlines()]
+        contador = {}
+        for mes in registros:
+            if mes not in contador:
+                contador[mes] = 0
+            contador[mes] += 1
+        return sorted([(mes, cantidad) for mes, cantidad in contador.items()], key=lambda x: x[0])
+
+
+
 
 def pregunta_05():
     """
@@ -133,26 +122,19 @@ def pregunta_05():
         ("D", 8, 3),
         ("E", 9, 1),
     ]
-
     """
-    datos=peticion()
-    conteo = {}
-    for sublist in datos:
-        letra = sublist[0][0]
-        comparacion=int(sublist[1][0])
-        if letra in conteo:
-            if conteo[letra][0] < comparacion:
-                conteo[letra][0] = comparacion
-            elif conteo[letra][1] > comparacion:
-                conteo[letra][1] = comparacion
-        else:
-            conteo[letra] = [comparacion,comparacion]
-    lista1=list(conteo.items())
-    conteo_ordenado = []
-    for i in range(len(lista1)):
-        conteo_ordenado.append((lista1[i][0],lista1[i][1][0],lista1[i][1][1]))
-    conteo_ordenado = sorted(conteo_ordenado, key=lambda x: x[0])
-    return conteo_ordenado
+    with open("data.csv", "r") as archivo:
+        registros = [linea.split(",") for linea in archivo.readlines()]
+        contador = {}
+        for registro in registros:
+            letra = registro[0]
+            valor = int(registro[1])
+            if letra not in contador:
+                contador[letra] = [valor, valor]
+            else:
+                contador[letra][0] = max(contador[letra][0], valor)
+                contador[letra][1] = min(contador[letra][1], valor)
+        return [(letra, contador[letra][0], contador[letra][1]) for letra in contador]
 
 
 def pregunta_06():
@@ -175,30 +157,19 @@ def pregunta_06():
         ("iii", 0, 9),
         ("jjj", 5, 17),
     ]
-
     """
-    datos=peticion()
-    conteo = {}
-    for sublist in datos:
-        linea = sublist[4]
-        comparacion=linea.split(",")
-        for par in comparacion:
-            par=par.split(":")
-            letras=par[0]
-            numero=int(par[1])
-            if letras in conteo:
-                if conteo[letras][0] > numero:
-                    conteo[letras][0] = numero
-                elif conteo[letras][1] < numero:
-                    conteo[letras][1] = numero
+    with open("data.csv", "r") as archivo:
+        registros = [linea.split(",")[4].strip() for linea in archivo.readlines()]
+        diccionario = {}
+        for registro in registros:
+            clave, valor = registro.split(":")
+            if clave not in diccionario:
+                diccionario[clave] = [int(valor), int(valor)]
             else:
-                conteo[letras] = [numero,numero]
-    lista1=list(conteo.items())
-    conteo_ordenado = []
-    for i in range(len(lista1)):
-        conteo_ordenado.append((lista1[i][0],lista1[i][1][0],lista1[i][1][1]))
-    conteo_ordenado = sorted(conteo_ordenado, key=lambda x: x[0])
-    return conteo_ordenado
+                diccionario[clave][0] = max(diccionario[clave][0], int(valor))
+                diccionario[clave][1] = min(diccionario[clave][1], int(valor))
+        return [(clave, diccionario[clave][1], diccionario[clave][0]) for clave in diccionario]
+
 
 
 def pregunta_07():
@@ -222,23 +193,21 @@ def pregunta_07():
     ]
 
     """
-    datos=peticion()
-    conteo = {}
-    for sublist in datos:
-        linea = sublist[1]
-        letra = sublist[0]
-        for par in linea:
-            numero=int(par)
-            if numero in conteo:
-                conteo[numero].append(letra)
-            else:
-                conteo[numero] = [letra]
-    lista1=list(conteo.items())
-    conteo_ordenado = []
-    for i in range(len(lista1)):
-        conteo_ordenado.append((lista1[i][0],lista1[i][1]))
-    conteo_ordenado = sorted(conteo_ordenado, key=lambda x: x[0])
-    return conteo_ordenado
+
+    with open("data.csv", "r") as archivo:
+        lista_registros = [(linea.split("\t")[1], linea.split("\t")[0]) for linea in archivo.readlines()]
+
+        numeros = sorted(set(tupla[0] for tupla in lista_registros))
+
+        lista_definitiva = []
+        for numero in numeros:
+            lista_filtrada = list(map(lambda x: x[1], list(filter(lambda tupla: tupla[0] == numero, lista_registros))))
+            lista_definitiva.append((int(numero), lista_filtrada))
+
+        return lista_definitiva
+
+
+
 
 
 def pregunta_08():
@@ -263,24 +232,21 @@ def pregunta_08():
     ]
 
     """
-    datos=peticion()
-    conteo = {}
-    for sublist in datos:
-        linea = sublist[1]
-        letra = sublist[0]
-        for par in linea:
-            numero=int(par)
-            if numero in conteo:
-                if not letra in conteo[numero]:
-                    conteo[numero].append(letra)
-            else:
-                conteo[numero] = [letra]
-    lista1=list(conteo.items())
-    conteo_ordenado = []
-    for i in range(len(lista1)):
-        conteo_ordenado.append((lista1[i][0],sorted(lista1[i][1])))
-    conteo_ordenado = sorted(conteo_ordenado, key=lambda x: x[0])
-    return conteo_ordenado
+    with open("data.csv", "r") as archivo:
+        lista_registros = [(linea.split("\t")[1], linea.split("\t")[0]) for linea in archivo.readlines()]
+
+        numeros = sorted(set(tupla[0] for tupla in lista_registros))
+
+        lista_definitiva = []
+        for numero in numeros:
+            lista_filtrada = sorted(set(list(map(lambda x: x[1], list(filter(lambda tupla: tupla[0] == numero, lista_registros))))))
+
+            lista_definitiva.append((int(numero), lista_filtrada))
+
+        return lista_definitiva
+
+
+
 
 
 def pregunta_09():
@@ -303,21 +269,30 @@ def pregunta_09():
     }
 
     """
-    datos=peticion()
-    conteo = {}
-    for sublist in datos:
-        linea = sublist[4]
-        comparacion=linea.split(",")
-        for par in comparacion:
-            par=par.split(":")
-            letras=par[0]
-            if letras in conteo:
-                conteo[letras] += 1
-            else:
-                conteo[letras] = 1
-    return conteo
+    with open("data.csv", "r") as archivo:
 
-print(pregunta_09())
+
+        lista_registros = list(map(lambda x: x.split(","),[linea.split("\t")[4][:-1] for linea in archivo.readlines()]))
+        lista_convertida = [[elemento] for sublist in lista_registros for elemento in sublist]
+
+
+
+
+        diccionario = {}
+        for registro in lista_convertida:
+            clave, valor = registro[0].split(":")
+            if clave not in diccionario:
+                diccionario[clave] = 0
+            diccionario[clave] += 1
+
+        return diccionario
+
+
+
+
+
+
+pregunta_09()
 
 def pregunta_10():
     """
@@ -337,14 +312,12 @@ def pregunta_10():
 
 
     """
-    datos=peticion()
-    conteo_ordenado = []
-    for sublist in datos:
-        letra=sublist[0]
-        abecedario=sublist[3].split(",")
-        linea = sublist[4].split(",")
-        conteo_ordenado.append((letra,len(abecedario),len(linea)))
-    return conteo_ordenado
+    with open("data.csv", "r") as archivo:
+        return [(linea.split("\t")[0], len(linea.split("\t")[3].split(",")), len(linea.split("\t")[-1].replace("\n","").split(",")))
+                for linea in archivo.readlines()]
+
+
+
 
 
 def pregunta_11():
@@ -360,20 +333,28 @@ def pregunta_11():
         "d": 73,
         "e": 86,
         "f": 134,
+
+
         "g": 35,
     }
+
+
     """
-    datos=peticion()
-    conteo_ordenado ={}
-    for sublist in datos:
-        letra=sublist[1]
-        abecedario=sublist[3].split(",")
-        for i in abecedario:
-            if i in conteo_ordenado:
-                conteo_ordenado[i] += int(letra)
-            else:
-                conteo_ordenado[i] = int(letra)
-    return conteo_ordenado
+    with open("data.csv", "r") as archivo:
+        lista_registros = [((linea.split("\t")[3]), int(linea.split("\t")[1])) for linea in archivo.readlines()]
+
+        lista_transformada = list(map(lambda lista: lista[0].split(",") + [lista[1]] , lista_registros))
+        diccionario = {}
+        for lista in lista_transformada:
+            for letra in lista[:-1]:
+                if letra not in diccionario:
+                    diccionario[letra] = 0
+                diccionario[letra] += lista[-1]
+        return dict(sorted(diccionario.items()))
+
+
+
+
 
 def pregunta_12():
     """
@@ -390,18 +371,16 @@ def pregunta_12():
     }
 
     """
-    datos=peticion()
-    conteo_ordenado ={}
-    letras = set()
-    for fila in datos:
-        letras.add(fila[0])
-    for sublist in datos:
-        letra=sublist[0]
-        abecedario=sublist[4].split(",")
-        for i in abecedario:
-            probar=i.split(":")
-            if letra in conteo_ordenado:
-                conteo_ordenado[letra] += int(probar[1])
-            else:
-                conteo_ordenado[letra] = int(probar[1])
-    return conteo_ordenado
+    with open('data.csv',"r") as archivo:
+        lista_registros = list((linea[0], linea.split("\t")[4][:-1]) for linea in archivo.readlines())
+
+
+    diccionario = {clave[0]: 0 for clave in lista_registros}
+
+    for letra in diccionario:
+        diccionario[letra] = sum(
+            list(map(lambda lista_completa: sum(list(map(lambda elemento_lista: int(elemento_lista.split(":")[1]), lista_completa))),
+                list(map(lambda x: x[1].split(","),
+                         list(filter(lambda x: letra in x, lista_registros)))))))
+
+    return dict(sorted(diccionario.items()))
