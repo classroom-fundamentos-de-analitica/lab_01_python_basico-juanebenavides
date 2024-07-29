@@ -21,7 +21,12 @@ def pregunta_01():
     214
 
     """
-    return
+    suma = 0
+    with open("data.csv", "r") as file:
+        for line in file:
+            row = line.strip().split(",")
+            suma += int(row[1])
+    return suma
 
 
 def pregunta_02():
@@ -39,7 +44,17 @@ def pregunta_02():
     ]
 
     """
-    return
+    counts = {}
+    with open("data.csv", "r") as file:
+        for line in file:
+            row = line.strip().split(",")
+            letter = row[0]
+            if letter in counts:
+                counts[letter] += 1
+            else:
+                counts[letter] = 1
+    result = sorted([(letter, count) for letter, count in counts.items()])
+    return result
 
 
 def pregunta_03():
@@ -57,7 +72,18 @@ def pregunta_03():
     ]
 
     """
-    return
+    sums = {}
+    with open("data.csv", "r") as file:
+        for line in file:
+            row = line.strip().split(",")
+            letter = row[0]
+            value = int(row[1])
+            if letter in sums:
+                sums[letter] += value
+            else:
+                sums[letter] = value
+    result = sorted([(letter, sum) for letter, sum in sums.items()])
+    return result
 
 
 def pregunta_04():
@@ -82,7 +108,18 @@ def pregunta_04():
     ]
 
     """
-    return
+    counts = {}
+    with open("data.csv", "r") as file:
+        for line in file:
+            row = line.strip().split(",")
+            date = row[2]
+            month = date.split("-")[1]
+            if month in counts:
+                counts[month] += 1
+            else:
+                counts[month] = 1
+    result = sorted([(month, count) for month, count in counts.items()])
+    return result
 
 
 def pregunta_05():
@@ -100,7 +137,22 @@ def pregunta_05():
     ]
 
     """
-    return
+    min_max_values = []
+    with open("data.csv", "r") as file:
+        for line in file:
+            row = line.strip().split(",")
+            letter = row[0]
+            value = int(row[1])
+            if not min_max_values:
+                min_max_values.append((letter, value, value))
+            else:
+                for i, (l, min_val, max_val) in enumerate(min_max_values):
+                    if l == letter:
+                        min_max_values[i] = (l, min(min_val, value), max(max_val, value))
+                        break
+                else:
+                    min_max_values.append((letter, value, value))
+    return min_max_values
 
 
 def pregunta_06():
@@ -125,7 +177,24 @@ def pregunta_06():
     ]
 
     """
-    return
+    
+    values = {}
+    with open("data.csv", "r") as file:
+        for line in file:
+            row = line.strip().split(",")
+            col5 = row[4]
+            items = col5.split(";")
+            for item in items:
+                key, value = item.split(":")
+                value = int(value)
+                if key in values:
+                    values[key].append(value)
+                else:
+                    values[key] = [value]
+    
+    result = [(key, min(val), max(val)) for key, val in values.items()]
+    result = sorted(result)
+    return result
 
 
 def pregunta_07():
@@ -149,7 +218,25 @@ def pregunta_07():
     ]
 
     """
-    return
+    associations = {}
+    
+    with open('data.csv', 'r') as file:
+        for line in file:
+            
+            columns = line.strip().split('\t')
+            
+            value = int(columns[1])
+            letter = columns[0]
+            
+            if value in associations:
+                associations[value].append(letter)
+            else:
+                associations[value] = [letter]
+    
+    
+    result = sorted(associations.items())
+    
+    return result
 
 
 def pregunta_08():
@@ -174,7 +261,25 @@ def pregunta_08():
     ]
 
     """
-    return
+    associations = {}
+
+    with open('data.csv', 'r') as file:
+        for line in file:
+            
+            columns = line.strip().split('\t')
+            
+            value = int(columns[1])
+            letters = columns[0]
+            
+            if value in associations:
+                associations[value].update(letters)
+            else:
+                associations[value] = set(letters)
+    
+  
+    result = [(key, sorted(list(letters))) for key, letters in sorted(associations.items())]
+    
+    return result
 
 
 def pregunta_09():
@@ -197,7 +302,27 @@ def pregunta_09():
     }
 
     """
-    return
+    counts = {}
+
+    with open('data.csv', 'r') as file:
+        for line in file:
+           
+            columns = line.strip().split('\t')
+            
+            if len(columns) > 4:  
+                entries = columns[4].split(',')
+                for entry in entries:
+                    key = entry.split(':')[0]
+                    
+                    if key in counts:
+                        counts[key] += 1
+                    else:
+                        counts[key] = 1
+
+    result = [key for key in sorted(counts.items())]
+    result = dict(result)
+    return result
+
 
 
 def pregunta_10():
@@ -218,7 +343,20 @@ def pregunta_10():
 
 
     """
-    return
+    
+    result = []
+
+    with open('data.csv', 'r') as file:
+        for line in file:
+            
+            columns = line.strip().split('\t')
+            if len(columns) > 4:
+                letter = columns[0]
+                col4_count = len(columns[3].split(','))
+                col5_count = len(columns[4].split(','))
+                result.append((letter, col4_count, col5_count))
+    
+    return result
 
 
 def pregunta_11():
@@ -239,7 +377,26 @@ def pregunta_11():
 
 
     """
-    return
+    sums = {}
+
+    with open('data.csv', 'r') as file:
+        for line in file:
+            columns = line.strip().split('\t')
+            if len(columns) > 4:
+                value = int(columns[1])
+                letters = columns[3].split(',')
+                
+                for letter in letters:
+                    
+                    if letter in sums:
+                        sums[letter] += value
+                    else:
+                        sums[letter] = value
+    
+    
+    sorted_sums = dict(sorted(sums.items()))
+    
+    return sorted_sums
 
 
 def pregunta_12():
@@ -257,4 +414,20 @@ def pregunta_12():
     }
 
     """
-    return
+    sums = {}
+
+    with open('data.csv', 'r') as file:
+        for line in file:
+            columns = line.strip().split('\t')
+            if len(columns) > 4:
+                letter = columns[0]
+                entries = columns[4].split(',')
+                total_sum = sum(int(entry.split(':')[1]) for entry in entries)
+                
+                if letter in sums:
+                    sums[letter] += total_sum
+                else:
+                    sums[letter] = total_sum
+    result = [letter for letter in sorted(sums.items())]
+    result = dict(result)
+    return result
