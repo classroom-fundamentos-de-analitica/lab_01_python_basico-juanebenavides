@@ -24,8 +24,8 @@ def pregunta_01():
     suma = 0
     with open("data.csv", "r") as file:
         for line in file:
-            row = line.strip().split(",")
-            suma += int(row[1])
+            columns = line.strip().split("\t")
+            suma += int(columns[1])
     return suma
 
 
@@ -45,16 +45,20 @@ def pregunta_02():
 
     """
     counts = {}
-    with open("data.csv", "r") as file:
+    
+    with open('data.csv', 'r') as file:
         for line in file:
-            row = line.strip().split(",")
-            letter = row[0]
+            columns = line.strip().split('\t')
+            letter = columns[0]
             if letter in counts:
                 counts[letter] += 1
             else:
                 counts[letter] = 1
-    result = sorted([(letter, count) for letter, count in counts.items()])
+    
+    result = sorted(counts.items())
+    
     return result
+
 
 
 def pregunta_03():
@@ -73,17 +77,21 @@ def pregunta_03():
 
     """
     sums = {}
-    with open("data.csv", "r") as file:
+
+    with open('data.csv', 'r') as file:
         for line in file:
-            row = line.strip().split(",")
-            letter = row[0]
-            value = int(row[1])
+            columns = line.strip().split('\t')
+            letter = columns[0]
+            value = int(columns[1])
             if letter in sums:
                 sums[letter] += value
             else:
                 sums[letter] = value
-    result = sorted([(letter, sum) for letter, sum in sums.items()])
+    
+    result = sorted(sums.items())
+    
     return result
+
 
 
 def pregunta_04():
@@ -108,17 +116,21 @@ def pregunta_04():
     ]
 
     """
-    counts = {}
-    with open("data.csv", "r") as file:
+    month_counts = {}
+    
+
+    with open('data.csv', 'r') as file:
         for line in file:
-            row = line.strip().split(",")
-            date = row[2]
-            month = date.split("-")[1]
-            if month in counts:
-                counts[month] += 1
+            columns = line.strip().split('\t')
+            date = columns[2]
+            month = date.split('-')[1]
+            if month in month_counts:
+                month_counts[month] += 1
             else:
-                counts[month] = 1
-    result = sorted([(month, count) for month, count in counts.items()])
+                month_counts[month] = 1
+    
+    result = sorted(month_counts.items())
+    
     return result
 
 
@@ -137,23 +149,22 @@ def pregunta_05():
     ]
 
     """
-    min_max_values = []
-    with open("data.csv", "r") as file:
+    min_max_values = {}
+    
+    with open('data.csv', 'r') as file:
         for line in file:
-            row = line.strip().split(",")
-            letter = row[0]
-            value = int(row[1])
-            if not min_max_values:
-                min_max_values.append((letter, value, value))
+            columns = line.strip().split('\t')
+            letter = columns[0]
+            value = int(columns[1])
+            if letter in min_max_values:
+                min_max_values[letter]['max'] = max(min_max_values[letter]['max'], value)
+                min_max_values[letter]['min'] = min(min_max_values[letter]['min'], value)
             else:
-                for i, (l, min_val, max_val) in enumerate(min_max_values):
-                    if l == letter:
-                        min_max_values[i] = (l, min(min_val, value), max(max_val, value))
-                        break
-                else:
-                    min_max_values.append((letter, value, value))
-    return min_max_values
-
+                min_max_values[letter] = {'max': value, 'min': value}
+    
+    result = [(letter, values['max'], values['min']) for letter, values in sorted(min_max_values.items())]
+    
+    return result
 
 def pregunta_06():
     """
@@ -178,23 +189,26 @@ def pregunta_06():
 
     """
     
-    values = {}
-    with open("data.csv", "r") as file:
-        for line in file:
-            row = line.strip().split(",")
-            col5 = row[4]
-            items = col5.split(";")
-            for item in items:
-                key, value = item.split(":")
-                value = int(value)
-                if key in values:
-                    values[key].append(value)
-                else:
-                    values[key] = [value]
+    value_ranges = {}
     
-    result = [(key, min(val), max(val)) for key, val in values.items()]
-    result = sorted(result)
+    with open('data.csv', 'r') as file:
+        for line in file:
+            columns = line.strip().split('\t')
+            encoded_dict = columns[4]
+            entries = encoded_dict.split(',')
+            for entry in entries:
+                key, value = entry.split(':')
+                value = int(value)
+                if key in value_ranges:
+                    value_ranges[key]['min'] = min(value_ranges[key]['min'], value)
+                    value_ranges[key]['max'] = max(value_ranges[key]['max'], value)
+                else:
+                    value_ranges[key] = {'min': value, 'max': value}
+    
+    result = [(key, values['min'], values['max']) for key, values in sorted(value_ranges.items())]
+    
     return result
+
 
 
 def pregunta_07():
