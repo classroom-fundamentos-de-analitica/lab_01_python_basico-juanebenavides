@@ -15,13 +15,17 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 def pregunta_01():
     """
-    Retorne la suma de la segunda columna.
+        Retorne la suma de la segunda columna.
 
-    Rta/
-    214
+        Rta/
+        214
 
-    """
-    return
+        """
+    with open("data.csv", "r") as archivo:
+        suma = 0
+        for linea in archivo.readlines():
+            suma += int(linea.split(",")[1])
+        return suma
 
 
 def pregunta_02():
@@ -37,9 +41,15 @@ def pregunta_02():
         ("D", 6),
         ("E", 14),
     ]
-
     """
-    return
+    with open("data.csv", "r") as archivo:
+        registros = [linea.split(",")[0] for linea in archivo.readlines()]
+        contador = {}
+        for letra in registros:
+            if letra not in contador:
+                contador[letra] = 0
+            contador[letra] += 1
+        return sorted([(letra, cantidad) for letra, cantidad in contador.items()], key=lambda x: x[0])
 
 
 def pregunta_03():
@@ -55,10 +65,15 @@ def pregunta_03():
         ("D", 31),
         ("E", 67),
     ]
-
     """
-    return
-
+    with open("data.csv", "r") as archivo:
+        registros = [linea.split(",")[0] for linea in archivo.readlines()]
+        contador = {}
+        for letra in registros:
+            if letra not in contador:
+                contador[letra] = 0
+            contador[letra] += int(linea.split(",")[1])
+        return sorted([(letra, suma) for letra, suma in contador.items()], key=lambda x: x[0])
 
 def pregunta_04():
     """
@@ -82,7 +97,16 @@ def pregunta_04():
     ]
 
     """
-    return
+    with open("data.csv", "r") as archivo:
+        registros = [linea.split(",")[2].split("-")[1] for linea in archivo.readlines()]
+        contador = {}
+        for mes in registros:
+            if mes not in contador:
+                contador[mes] = 0
+            contador[mes] += 1
+        return sorted([(mes, cantidad) for mes, cantidad in contador.items()], key=lambda x: x[0])
+
+
 
 
 def pregunta_05():
@@ -98,9 +122,19 @@ def pregunta_05():
         ("D", 8, 3),
         ("E", 9, 1),
     ]
-
     """
-    return
+    with open("data.csv", "r") as archivo:
+        registros = [linea.split(",") for linea in archivo.readlines()]
+        contador = {}
+        for registro in registros:
+            letra = registro[0]
+            valor = int(registro[1])
+            if letra not in contador:
+                contador[letra] = [valor, valor]
+            else:
+                contador[letra][0] = max(contador[letra][0], valor)
+                contador[letra][1] = min(contador[letra][1], valor)
+        return [(letra, contador[letra][0], contador[letra][1]) for letra in contador]
 
 
 def pregunta_06():
@@ -123,9 +157,19 @@ def pregunta_06():
         ("iii", 0, 9),
         ("jjj", 5, 17),
     ]
-
     """
-    return
+    with open("data.csv", "r") as archivo:
+        registros = [linea.split(",")[4].strip() for linea in archivo.readlines()]
+        diccionario = {}
+        for registro in registros:
+            clave, valor = registro.split(":")
+            if clave not in diccionario:
+                diccionario[clave] = [int(valor), int(valor)]
+            else:
+                diccionario[clave][0] = max(diccionario[clave][0], int(valor))
+                diccionario[clave][1] = min(diccionario[clave][1], int(valor))
+        return [(clave, diccionario[clave][1], diccionario[clave][0]) for clave in diccionario]
+
 
 
 def pregunta_07():
@@ -149,7 +193,21 @@ def pregunta_07():
     ]
 
     """
-    return
+
+    with open("data.csv", "r") as archivo:
+        lista_registros = [(linea.split("\t")[1], linea.split("\t")[0]) for linea in archivo.readlines()]
+
+        numeros = sorted(set(tupla[0] for tupla in lista_registros))
+
+        lista_definitiva = []
+        for numero in numeros:
+            lista_filtrada = list(map(lambda x: x[1], list(filter(lambda tupla: tupla[0] == numero, lista_registros))))
+            lista_definitiva.append((int(numero), lista_filtrada))
+
+        return lista_definitiva
+
+
+
 
 
 def pregunta_08():
@@ -174,7 +232,21 @@ def pregunta_08():
     ]
 
     """
-    return
+    with open("data.csv", "r") as archivo:
+        lista_registros = [(linea.split("\t")[1], linea.split("\t")[0]) for linea in archivo.readlines()]
+
+        numeros = sorted(set(tupla[0] for tupla in lista_registros))
+
+        lista_definitiva = []
+        for numero in numeros:
+            lista_filtrada = sorted(set(list(map(lambda x: x[1], list(filter(lambda tupla: tupla[0] == numero, lista_registros))))))
+
+            lista_definitiva.append((int(numero), lista_filtrada))
+
+        return lista_definitiva
+
+
+
 
 
 def pregunta_09():
@@ -197,8 +269,30 @@ def pregunta_09():
     }
 
     """
-    return
+    with open("data.csv", "r") as archivo:
 
+
+        lista_registros = list(map(lambda x: x.split(","),[linea.split("\t")[4][:-1] for linea in archivo.readlines()]))
+        lista_convertida = [[elemento] for sublist in lista_registros for elemento in sublist]
+
+
+
+
+        diccionario = {}
+        for registro in lista_convertida:
+            clave, valor = registro[0].split(":")
+            if clave not in diccionario:
+                diccionario[clave] = 0
+            diccionario[clave] += 1
+
+        return diccionario
+
+
+
+
+
+
+pregunta_09()
 
 def pregunta_10():
     """
@@ -218,7 +312,12 @@ def pregunta_10():
 
 
     """
-    return
+    with open("data.csv", "r") as archivo:
+        return [(linea.split("\t")[0], len(linea.split("\t")[3].split(",")), len(linea.split("\t")[-1].replace("\n","").split(",")))
+                for linea in archivo.readlines()]
+
+
+
 
 
 def pregunta_11():
@@ -234,12 +333,27 @@ def pregunta_11():
         "d": 73,
         "e": 86,
         "f": 134,
+
+
         "g": 35,
     }
 
 
     """
-    return
+    with open("data.csv", "r") as archivo:
+        lista_registros = [((linea.split("\t")[3]), int(linea.split("\t")[1])) for linea in archivo.readlines()]
+
+        lista_transformada = list(map(lambda lista: lista[0].split(",") + [lista[1]] , lista_registros))
+        diccionario = {}
+        for lista in lista_transformada:
+            for letra in lista[:-1]:
+                if letra not in diccionario:
+                    diccionario[letra] = 0
+                diccionario[letra] += lista[-1]
+        return dict(sorted(diccionario.items()))
+
+
+
 
 
 def pregunta_12():
@@ -257,4 +371,16 @@ def pregunta_12():
     }
 
     """
-    return
+    with open('data.csv',"r") as archivo:
+        lista_registros = list((linea[0], linea.split("\t")[4][:-1]) for linea in archivo.readlines())
+
+
+    diccionario = {clave[0]: 0 for clave in lista_registros}
+
+    for letra in diccionario:
+        diccionario[letra] = sum(
+            list(map(lambda lista_completa: sum(list(map(lambda elemento_lista: int(elemento_lista.split(":")[1]), lista_completa))),
+                list(map(lambda x: x[1].split(","),
+                         list(filter(lambda x: letra in x, lista_registros)))))))
+
+    return dict(sorted(diccionario.items()))
