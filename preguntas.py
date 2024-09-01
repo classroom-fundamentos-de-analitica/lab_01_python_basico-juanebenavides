@@ -11,6 +11,7 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 
 """
+import csv
 
 
 def pregunta_01():
@@ -21,7 +22,13 @@ def pregunta_01():
     214
 
     """
-    return
+    data = r'data.csv'
+    total = 0
+    with open(data) as file:
+        reader = csv.reader(file, delimiter='\t')
+        for row in reader:
+            total += int(row[1])  # Sumar el valor de la segunda column
+    return total
 
 
 def pregunta_02():
@@ -39,7 +46,20 @@ def pregunta_02():
     ]
 
     """
-    return
+    data = r'data.csv'
+    conteo_letras = {}
+
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            primera_letra = fila[0]
+            if primera_letra in conteo_letras:
+                conteo_letras[primera_letra] += 1
+            else:
+                conteo_letras[primera_letra] = 1
+
+    conteo_ordenado = sorted(conteo_letras.items())
+    return conteo_ordenado
 
 
 def pregunta_03():
@@ -57,7 +77,18 @@ def pregunta_03():
     ]
 
     """
-    return
+    data = r'data.csv'
+    conteo_letras = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            primera_letra = fila[0]
+            if primera_letra in conteo_letras:
+                conteo_letras[primera_letra] += int(fila[1])
+            else:
+                conteo_letras[primera_letra] = int(fila[1])
+    conteo_ordenado = sorted(conteo_letras.items())
+    return conteo_ordenado
 
 
 def pregunta_04():
@@ -82,7 +113,18 @@ def pregunta_04():
     ]
 
     """
-    return
+    data = r'data.csv'
+    conteo_meses = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            primera_letra = fila[2].split("-")
+            if primera_letra[1] in conteo_meses:
+                conteo_meses[primera_letra[1]] += 1
+            else:
+                conteo_meses[primera_letra[1]] = 1
+    conteo_ordenado = sorted(conteo_meses.items())
+    return conteo_ordenado
 
 
 def pregunta_05():
@@ -100,7 +142,25 @@ def pregunta_05():
     ]
 
     """
-    return
+    data = r'data.csv'
+    max_min_por_letra = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            letra = fila[0][0]
+            valor = int(fila[1])
+            if letra in max_min_por_letra:
+                max_valor, min_valor = max_min_por_letra[letra]
+                max_valor = max(max_valor, valor)
+                min_valor = min(min_valor, valor)
+                max_min_por_letra[letra] = (max_valor, min_valor)
+            else:
+                max_min_por_letra[letra] = (valor, valor)
+    max_min_por_letra_lista = sorted(max_min_por_letra.items())
+    l = []
+    for letra, (max_valor, min_valor) in max_min_por_letra_lista:
+        l.append((letra, max_valor, min_valor))
+    return l
 
 
 def pregunta_06():
@@ -125,7 +185,26 @@ def pregunta_06():
     ]
 
     """
-    return
+    data = r'data.csv'
+    max_min_por_letra = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            letra = fila[4].split(",")
+            for i in range(len(letra)):
+                letra1 = letra[i].split(":")
+                if letra1[0] in max_min_por_letra:
+                    max_valor, min_valor = max_min_por_letra[letra1[0]]
+                    max_valor = max(max_valor, int(letra1[1]))
+                    min_valor = min(min_valor, int(letra1[1]))
+                    max_min_por_letra[letra1[0]] = (max_valor, min_valor)
+                else:
+                    max_min_por_letra[letra1[0]] = (int(letra1[1]), int(letra1[1]))
+    max_min_por_letra_lista = sorted(max_min_por_letra.items())
+    l1 = []
+    for letra, (max_valor, min_valor) in max_min_por_letra_lista:
+        l1.append((letra, min_valor, max_valor))
+    return l1
 
 
 def pregunta_07():
@@ -149,7 +228,19 @@ def pregunta_07():
     ]
 
     """
-    return
+    data = r'data.csv'
+    conteo_letras = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            primera_letra = int(fila[1])
+            if primera_letra in conteo_letras:
+                conteo_letras[primera_letra].append(fila[0])
+            else:
+                conteo_letras[primera_letra] = []
+                conteo_letras[primera_letra].append(fila[0])
+    conteo_ordenado = sorted(conteo_letras.items())
+    return conteo_ordenado
 
 
 def pregunta_08():
@@ -174,7 +265,21 @@ def pregunta_08():
     ]
 
     """
-    return
+    data = r'data.csv'
+    conteo_letras = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            primera_letra = int(fila[1])
+            if primera_letra in conteo_letras:
+                if fila[0] not in conteo_letras[primera_letra]:
+                    conteo_letras[primera_letra].append(fila[0])
+            else:
+                conteo_letras[primera_letra] = []
+                conteo_letras[primera_letra].append(fila[0])
+            conteo_letras[primera_letra].sort()
+    conteo_ordenado = sorted(conteo_letras.items())
+    return conteo_ordenado
 
 
 def pregunta_09():
@@ -197,7 +302,20 @@ def pregunta_09():
     }
 
     """
-    return
+    data = r'data.csv'
+    max_min_por_letra = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            letra = fila[4].split(",")
+            for i in range(len(letra)):
+                letra1 = letra[i].split(":")
+                if letra1[0] in max_min_por_letra:
+                    max_min_por_letra[letra1[0]] += 1
+                else:
+                    max_min_por_letra[letra1[0]] = 1
+    max_min_por_letra = {k: max_min_por_letra[k] for k in sorted(max_min_por_letra.keys())}
+    return max_min_por_letra
 
 
 def pregunta_10():
@@ -218,7 +336,16 @@ def pregunta_10():
 
 
     """
-    return
+    data = r'data.csv'
+    max_min_por_letra = []
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            i3 = fila[3].split(",")
+            i4 = fila[4].split(",")
+            max_min_por_letra.append((fila[0], len(i3), len(i4)))
+
+    return max_min_por_letra
 
 
 def pregunta_11():
@@ -239,7 +366,20 @@ def pregunta_11():
 
 
     """
-    return
+    data = r'data.csv'
+    conteo_letras = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            primera_letra = int(fila[1])
+            x = fila[3].split(",")
+            for i in range(len(x)):
+                if x[i] in conteo_letras:
+                    conteo_letras[x[i]] += primera_letra
+                else:
+                    conteo_letras[x[i]] = primera_letra
+    conteo_letras = {k: conteo_letras[k] for k in sorted(conteo_letras.keys())}
+    return conteo_letras
 
 
 def pregunta_12():
@@ -257,4 +397,18 @@ def pregunta_12():
     }
 
     """
-    return
+    data = r'data.csv'
+    conteo_letras = {}
+    with open(data, mode='r') as file:
+        lector_csv = csv.reader(file, delimiter='\t')
+        for fila in lector_csv:
+            primera_letra = fila[0]
+            x = fila[4].split(",")
+            for i in range(len(x)):
+                n = x[i].split(":")
+                if primera_letra in conteo_letras:
+                    conteo_letras[primera_letra] += int(n[1])
+                else:
+                    conteo_letras[primera_letra] = int(n[1])
+    conteo_letras = {k: conteo_letras[k] for k in sorted(conteo_letras.keys())}
+    return conteo_letras
